@@ -1,0 +1,32 @@
+<testsuites id="" name="" tests="13" failures="0" skipped="0" errors="0" time="4.922600999999999">
+<testsuite name="auth.spec.ts" timestamp="2025-10-23T12:46:00.513Z" hostname="" tests="1" failures="0" skipped="0" time="0.441" errors="0">
+<testcase name="POST /login - deve rejeitar login com dados incorretos" classname="auth.spec.ts" time="0.441">
+</testcase>
+</testsuite>
+<testsuite name="users.spec.ts" timestamp="2025-10-23T12:46:00.513Z" hostname="" tests="12" failures="0" skipped="0" time="3.06" errors="0">
+<testcase name="Fluxo completo de usuários - ServeRest › POST /usuarios - deve registrar novo usuário com sucesso" classname="users.spec.ts" time="0.202">
+</testcase>
+<testcase name="Fluxo completo de usuários - ServeRest › POST /login - deve autenticar usuário e retornar token JWT" classname="users.spec.ts" time="0.188">
+</testcase>
+<testcase name="Fluxo completo de usuários - ServeRest › POST /usuarios - deve falhar sem campos obrigatórios" classname="users.spec.ts" time="0.182">
+</testcase>
+<testcase name="Fluxo completo de usuários - ServeRest › GET /usuarios - deve obter lista de usuários cadastrados" classname="users.spec.ts" time="0.217">
+</testcase>
+<testcase name="Fluxo completo de usuários - ServeRest › GET /usuarios/{id} - deve consultar informações de um usuário específico" classname="users.spec.ts" time="0.199">
+</testcase>
+<testcase name="Fluxo completo de usuários - ServeRest › PUT /usuarios/{id} - deve editar dados do usuário existente" classname="users.spec.ts" time="0.366">
+</testcase>
+<testcase name="Fluxo completo de usuários - ServeRest › NEGATIVO - deve impedir cadastro com e-mail já existente" classname="users.spec.ts" time="0.207">
+</testcase>
+<testcase name="Fluxo completo de usuários - ServeRest › PUT /usuarios/{id} - deve falhar ao usar e-mail já existente" classname="users.spec.ts" time="0.365">
+</testcase>
+<testcase name="Fluxo completo de usuários - ServeRest › PUT /usuarios/{id} - comportamento sem token (documentar)" classname="users.spec.ts" time="0.565">
+</testcase>
+<testcase name="Fluxo completo de usuários - ServeRest › DELETE /usuarios/{id} - deve remover usuário do sistema" classname="users.spec.ts" time="0.189">
+</testcase>
+<testcase name="Fluxo completo de usuários - ServeRest › DELETE /usuarios/{id} - deve lidar com id inexistente" classname="users.spec.ts" time="0.19">
+</testcase>
+<testcase name="Fluxo completo de usuários - ServeRest › NEGATIVO - deve retornar 404 ao buscar usuário inexistente" classname="users.spec.ts" time="0.19">
+</testcase>
+</testsuite>
+</testsuites>

@@ -1,0 +1,16 @@
+{
+  "name": "apiserveresttest",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Testes automatizados de API (ServeRest) usando Playwright Test + GitHub Actions",
+  "scripts": {
+    "test": "playwright test",
+    "test:report": "playwright show-report",
+    "ci": "playwright test --reporter=list"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.45.0",
+    "typescript": "^5.4.0",
+    "zod": "^3.23.8"
+  }
+}
