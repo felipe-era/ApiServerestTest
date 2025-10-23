@@ -9,8 +9,7 @@
     "ci": "playwright test --reporter=list"
   },
   "devDependencies": {
-    "@playwright/test": "^1.45.0",
-    "typescript": "^5.4.0",
-    "zod": "^3.23.8"
+    "@playwright/test": "^1.56.1",
+    "typescript": "^5.9.3"
   }
 }
