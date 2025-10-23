@@ -21,7 +21,6 @@ export async function createRandomUser(
   };
 
   const res = await request.post('/usuarios', { data: payload });
-  // ServeRest costuma responder 201 na criação
   expect(res.status(), 'Status ao criar usuário').toBe(201);
 
   const body = await res.json();
@@ -47,7 +46,6 @@ export async function loginAndGetToken(
   const body = await res.json();
   expect(body).toHaveProperty('authorization');
 
-  // Normalmente já vem como "Bearer <jwt>"
   const token: string = body.authorization.startsWith('Bearer ')
     ? body.authorization
     : `Bearer ${body.authorization}`;
@@ -63,10 +61,8 @@ export async function deleteUser(
   const headers = token ? { Authorization: token } : undefined;
   const res = await request.delete(`/usuarios/${id}`, { headers });
 
-  // Em usuário existente: 200; em inexistente: pode vir 404 – trate se for cleanup
   expect([200, 404]).toContain(res.status());
 
-  // Em 200, costuma vir { message: 'Registro excluído com sucesso' }
   if (res.status() === 200) {
     const body = await res.json();
     expect(body).toHaveProperty('message');

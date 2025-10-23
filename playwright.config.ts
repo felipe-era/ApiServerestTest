@@ -12,7 +12,7 @@ export default defineConfig({
     ['html', { open: 'never', outputFolder: 'playwright-report' }],
   ],
   use: {
-    baseURL: process.env.BASE_URL || 'https://serverest.dev',
+    baseURL: 'https://serverest.dev',
     extraHTTPHeaders: {
       'Content-Type': 'application/json; charset=utf-8',
     },

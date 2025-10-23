@@ -1,26 +1,25 @@
 import { test, expect } from '@playwright/test';
 import { createRandomUser, loginAndGetToken, deleteUser, CreatedUser } from './helpers';
 
-test.describe.serial('Fluxo completo de usuários - ServeRest', () => {
+test.describe.serial('Fluxo validação e testes de usuários - ServeRest', () => {
     let created: CreatedUser;
     let token: string;
 
 
-    test('POST /usuarios - deve registrar novo usuário com sucesso', async ({ request }) => {
+    test('CT001 - POST /usuarios - deve registrar novo usuário com sucesso', async ({ request }) => {
         created = await createRandomUser(request, 'true');
     });
 
-    test('POST /login - deve autenticar usuário e retornar token JWT', async ({ request }) => {
+    test('CT002 - POST /login - deve autenticar usuário e retornar token JWT', async ({ request }) => {
         token = await loginAndGetToken(request, created.email, created.password);
         expect(token).toMatch(/^Bearer\s.+/);
     });
 
-    test('POST /usuarios - deve falhar sem campos obrigatórios', async ({ request }) => {
+    test('CT003 - POST /usuarios - deve falhar sem campos obrigatórios', async ({ request }) => {
         const res = await request.post('/usuarios', { data: { nome: 'SemEmail' } as any });
         expect(res.status()).toBe(400);
         const body = await res.json();
 
-        // Valida formato de mapa por campo (esperado pelo ServeRest)
         expect(body).toEqual(expect.objectContaining({
             email: expect.stringMatching(/obrigatório/i),
             password: expect.stringMatching(/obrigatório/i),
@@ -28,7 +27,7 @@ test.describe.serial('Fluxo completo de usuários - ServeRest', () => {
         }));
     });
 
-    test('GET /usuarios - deve obter lista de usuários cadastrados', async ({ request }) => {
+    test('CT004 - GET /usuarios - deve obter lista de usuários cadastrados', async ({ request }) => {
         const res = await request.get('/usuarios');
         expect(res.status()).toBe(200);
         const body = await res.json();
@@ -36,7 +35,7 @@ test.describe.serial('Fluxo completo de usuários - ServeRest', () => {
         expect(Array.isArray(body.usuarios)).toBeTruthy();
     });
 
-    test('GET /usuarios/{id} - deve consultar informações de um usuário específico', async ({ request }) => {
+    test('CT005 - GET /usuarios/{id} - deve consultar informações de um usuário específico', async ({ request }) => {
         const res = await request.get(`/usuarios/${created._id}`);
         expect(res.status()).toBe(200);
         const body = await res.json();
@@ -48,7 +47,7 @@ test.describe.serial('Fluxo completo de usuários - ServeRest', () => {
         });
     });
 
-    test('PUT /usuarios/{id} - deve editar dados do usuário existente', async ({ request }) => {
+    test('CT006 - PUT /usuarios/{id} - deve editar dados do usuário existente', async ({ request }) => {
         const novoNome = created.nome + ' Editado';
         const res = await request.put(`/usuarios/${created._id}`, {
             data: {
@@ -65,7 +64,7 @@ test.describe.serial('Fluxo completo de usuários - ServeRest', () => {
         expect(body.nome).toBe(novoNome);
     });
 
-    test('NEGATIVO - deve impedir cadastro com e-mail já existente', async ({ request }) => {
+    test('CT007 - NEGATIVO - deve impedir cadastro com e-mail já existente', async ({ request }) => {
         const res = await request.post('/usuarios', {
             data: {
                 nome: 'Duplicado',
@@ -79,8 +78,7 @@ test.describe.serial('Fluxo completo de usuários - ServeRest', () => {
         expect(body).toHaveProperty('message');
     });
 
-    test('PUT /usuarios/{id} - deve falhar ao usar e-mail já existente', async ({ request }) => {
-        // cria outro usuário
+    test('CT008 - PUT /usuarios/{id} - deve falhar ao usar e-mail já existente', async ({ request }) => {
         const alt = await createRandomUser(request, 'false');
         const res = await request.put(`/usuarios/${created._id}`, {
             data: { ...created, email: alt.email },
@@ -89,8 +87,7 @@ test.describe.serial('Fluxo completo de usuários - ServeRest', () => {
         expect([400, 409]).toContain(res.status());
     });
 
-    test('PUT /usuarios/{id} - comportamento sem token (documentar)', async ({ request }) => {
-        // estado atual
+    test('CT009 - PUT /usuarios/{id} - comportamento sem token (documentar)', async ({ request }) => {
         const beforeRes = await request.get(`/usuarios/${created._id}`);
         expect(beforeRes.ok()).toBeTruthy();
         const before = await beforeRes.json();
@@ -107,8 +104,6 @@ test.describe.serial('Fluxo completo de usuários - ServeRest', () => {
             }
         });
 
-        // Se a API aceitar (ServeRest costuma aceitar), valide que alterou.
-        // Se a API bloquear, valide que NÃO alterou.
         if (res.status() >= 200 && res.status() < 300) {
             const after = await (await request.get(`/usuarios/${created._id}`)).json();
             expect(after.nome).toBe(tentativa); // comportamento observado no ServeRest
@@ -118,16 +113,16 @@ test.describe.serial('Fluxo completo de usuários - ServeRest', () => {
         }
     });
 
-    test('DELETE /usuarios/{id} - deve remover usuário do sistema', async ({ request }) => {
+    test('CT010 - DELETE /usuarios/{id} - deve remover usuário do sistema', async ({ request }) => {
         await deleteUser(request, created._id, token);
     });
 
-    test('DELETE /usuarios/{id} - deve lidar com id inexistente', async ({ request }) => {
+    test('CT011 - DELETE /usuarios/{id} - deve lidar com id inexistente', async ({ request }) => {
         const res = await request.delete('/usuarios/aaaaaaaaaaaaaaaaaaaaaaaa');
         expect([200, 404]).toContain(res.status());
     });
 
-    test('NEGATIVO - deve retornar 404 ao buscar usuário inexistente', async ({ request }) => {
+    test('CT012 - NEGATIVO - deve retornar 404 ao buscar usuário inexistente', async ({ request }) => {
         const res = await request.get('/usuarios/99999999999999999999');
         expect([400, 404]).toContain(res.status());
     });
